@@ -1,4 +1,4 @@
-# scrapping_circuit_selenium.py
+# scrapping_f1_kaggle_all.py
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -7,8 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-import os
 import json
+import os
 from bs4 import BeautifulSoup
 
 # ============================
@@ -115,7 +115,7 @@ def table_to_json_obj(header, rows):
         rows_out = rows
     return {"header": header, "rows": rows_out, "count": len(rows)}
 
-def export_tables_json(tables_html, dest_path="tables_from_live.json"):
+def export_tables_json(tables_html, dest_path):
     tables_data = []
     for t_html in tables_html:
         hdr = extraire_header(t_html)
@@ -130,9 +130,7 @@ def export_tables_json(tables_html, dest_path="tables_from_live.json"):
 # ============================
 
 def scroll_table_element(driver, table_selector='[role="table"]', scroll_pause_time=1.0, max_attempts=50):
-    """
-    Fait défiler l'élément scrollable du tableau jusqu'à ce que tout soit chargé.
-    """
+    """Fait défiler l'élément scrollable du tableau jusqu'à ce que tout soit chargé."""
     elem = driver.find_element(By.CSS_SELECTOR, table_selector)
     last_scroll_top = 0
     same_count = 0
@@ -152,9 +150,7 @@ def scroll_table_element(driver, table_selector='[role="table"]', scroll_pause_t
             last_scroll_top = scroll_top
 
 def scroll_to_load_all(driver, scroll_pause_time=1.0, max_attempts=30):
-    """
-    Scroll général sur la fenêtre (utile si la table n'est pas dans un conteneur scrollable).
-    """
+    """Scroll général sur la fenêtre (utile si la table n'est pas dans un conteneur scrollable)."""
     last_height = driver.execute_script("return document.body.scrollHeight")
     same_count = 0
 
@@ -179,11 +175,9 @@ def scroll_to_load_all(driver, scroll_pause_time=1.0, max_attempts=30):
 def recuperer_page_selenium(url: str,
                             headless: bool = True,
                             wait_selector: str = '[role="table"]',
-                            timeout: int = 15,
+                            timeout: int = 20,
                             reuse_profile: str = None) -> str:
-    """
-    Ouvre la page Kaggle, attend le chargement du tableau, scrolle jusqu'à la fin et retourne le HTML complet.
-    """
+    """Ouvre la page Kaggle, attend le tableau, scrolle jusqu'à la fin et retourne le HTML complet."""
     chrome_options = Options()
     if headless:
         chrome_options.add_argument("--headless=new")
@@ -203,9 +197,9 @@ def recuperer_page_selenium(url: str,
         wait = WebDriverWait(driver, timeout)
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, wait_selector)))
 
-        # Tentative : scroll interne si possible, sinon scroll global
+        # Tentative scroll interne, sinon global
         try:
-            scroll_table_element(driver, table_selector=wait_selector, scroll_pause_time=1.0, max_attempts=50)
+            scroll_table_element(driver, table_selector=wait_selector, scroll_pause_time=1.0, max_attempts=60)
         except Exception as e:
             print(f"[WARN] Scroll interne échoué ({e}), tentative scroll global...")
             scroll_to_load_all(driver, scroll_pause_time=1.0, max_attempts=40)
@@ -217,29 +211,46 @@ def recuperer_page_selenium(url: str,
         driver.quit()
 
 # ============================
-# ========= MAIN TEST ========
+# ======= MAIN MULTI URL =====
 # ============================
 
 if __name__ == "__main__":
-    URL = "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data?select=circuits.csv"
+    base_url = "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data?select={name}.csv"
+    tables_list = [
+        "constructor_results",
+        "constructor_standings",
+        "circuits",
+        "constructors",
+        "driver_standings",
+        "lap_times",
+        "drivers",
+        "pit_stops",
+        "qualifying",
+        "races",
+        "results",
+        "seasons",
+        "sprint_results",
+        "status",
+    ]
 
-    rendered_html = recuperer_page_selenium(
-        URL,
-        headless=False,
-        wait_selector='[role="table"]',
-        timeout=25,
-        reuse_profile=None
-    )
+    os.makedirs("outputs", exist_ok=True)
 
-    with open("page_rendue.html", "w", encoding="utf-8") as f:
-        f.write(rendered_html)
+    for name in tables_list:
+        url = base_url.format(name=name)
+        print(f"\n============================")
+        print(f"🔗 Scraping : {url}")
+        print("============================")
 
-    tables = extraire_donnees(rendered_html)
-    print(f"Tables trouvées: {len(tables)}")
+        try:
+            rendered_html = recuperer_page_selenium(url, headless=True)
+            tables = extraire_donnees(rendered_html)
+            if not tables:
+                print(f"[WARN] Aucun tableau trouvé pour {name}")
+                continue
 
-    if tables:
-        print("Header first table:", extraire_header(tables[0]))
-        print("Rows count first table:", len(extraire_rows(tables[0])))
+            dest_path = f"outputs/{name}.json"
+            export_tables_json(tables, dest_path)
+            print(f"✅ Fichier exporté -> {dest_path}")
 
-    out = export_tables_json(tables, dest_path="tables_live.json")
-    print("✅ Export JSON créé ->", out)
+        except Exception as e:
+            print(f"❌ Erreur pour {name} : {e}")
