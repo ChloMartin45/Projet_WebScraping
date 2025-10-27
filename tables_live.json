@@ -562,9 +562,306 @@
           "Longitude": "4.32694",
           "Altitude": "139",
           "Wikipedia URL": "http://en.wikipedia.org/wiki/Nivelles-Baulers"
+        },
+        {
+          "Id": "51",
+          "Reference name of circuit": "charade",
+          "Actual name of circuit": "Charade Circuit",
+          "City": "Clermont-Ferrand",
+          "Country": "France",
+          "Latitude": "45.7472",
+          "Longitude": "3.03889",
+          "Altitude": "790",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Charade_Circuit"
+        },
+        {
+          "Id": "52",
+          "Reference name of circuit": "tremblant",
+          "Actual name of circuit": "Circuit Mont-Tremblant",
+          "City": "Quebec",
+          "Country": "Canada",
+          "Latitude": "46.1877",
+          "Longitude": "-74.6099",
+          "Altitude": "214",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Circuit_Mont-Tremblant"
+        },
+        {
+          "Id": "53",
+          "Reference name of circuit": "essarts",
+          "Actual name of circuit": "Rouen-Les-Essarts",
+          "City": "Rouen",
+          "Country": "France",
+          "Latitude": "49.3306",
+          "Longitude": "1.00458",
+          "Altitude": "81",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Rouen-Les-Essarts"
+        },
+        {
+          "Id": "54",
+          "Reference name of circuit": "lemans",
+          "Actual name of circuit": "Le Mans",
+          "City": "Le Mans",
+          "Country": "France",
+          "Latitude": "47.95",
+          "Longitude": "0.224231",
+          "Altitude": "67",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Circuit_de_la_Sarthe#Bugatti_Circuit"
+        },
+        {
+          "Id": "55",
+          "Reference name of circuit": "reims",
+          "Actual name of circuit": "Reims-Gueux",
+          "City": "Reims",
+          "Country": "France",
+          "Latitude": "49.2542",
+          "Longitude": "3.93083",
+          "Altitude": "88",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Reims-Gueux"
+        },
+        {
+          "Id": "56",
+          "Reference name of circuit": "george",
+          "Actual name of circuit": "Prince George Circuit",
+          "City": "Eastern Cape Province",
+          "Country": "South Africa",
+          "Latitude": "-33.0486",
+          "Longitude": "27.8736",
+          "Altitude": "15",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Prince_George_Circuit"
+        },
+        {
+          "Id": "57",
+          "Reference name of circuit": "zeltweg",
+          "Actual name of circuit": "Zeltweg",
+          "City": "Styria",
+          "Country": "Austria",
+          "Latitude": "47.2039",
+          "Longitude": "14.7478",
+          "Altitude": "676",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Zeltweg_Airfield"
+        },
+        {
+          "Id": "58",
+          "Reference name of circuit": "aintree",
+          "Actual name of circuit": "Aintree",
+          "City": "Liverpool",
+          "Country": "UK",
+          "Latitude": "53.4769",
+          "Longitude": "-2.94056",
+          "Altitude": "20",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Aintree_Motor_Racing_Circuit"
+        },
+        {
+          "Id": "59",
+          "Reference name of circuit": "boavista",
+          "Actual name of circuit": "Circuito da Boavista",
+          "City": "Oporto",
+          "Country": "Portugal",
+          "Latitude": "41.1705",
+          "Longitude": "-8.67325",
+          "Altitude": "28",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Circuito_da_Boavista"
+        },
+        {
+          "Id": "60",
+          "Reference name of circuit": "riverside",
+          "Actual name of circuit": "Riverside International Raceway",
+          "City": "California",
+          "Country": "USA",
+          "Latitude": "33.937",
+          "Longitude": "-117.273",
+          "Altitude": "470",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Riverside_International_Raceway"
+        },
+        {
+          "Id": "61",
+          "Reference name of circuit": "avus",
+          "Actual name of circuit": "AVUS",
+          "City": "Berlin",
+          "Country": "Germany",
+          "Latitude": "52.4806",
+          "Longitude": "13.2514",
+          "Altitude": "53",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/AVUS"
+        },
+        {
+          "Id": "62",
+          "Reference name of circuit": "monsanto",
+          "Actual name of circuit": "Monsanto Park Circuit",
+          "City": "Lisbon",
+          "Country": "Portugal",
+          "Latitude": "38.7197",
+          "Longitude": "-9.20306",
+          "Altitude": "158",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Monsanto_Park_Circuit"
+        },
+        {
+          "Id": "63",
+          "Reference name of circuit": "sebring",
+          "Actual name of circuit": "Sebring International Raceway",
+          "City": "Florida",
+          "Country": "USA",
+          "Latitude": "27.4547",
+          "Longitude": "-81.3483",
+          "Altitude": "18",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Sebring_Raceway"
+        },
+        {
+          "Id": "64",
+          "Reference name of circuit": "ain-diab",
+          "Actual name of circuit": "Ain Diab",
+          "City": "Casablanca",
+          "Country": "Morocco",
+          "Latitude": "33.5786",
+          "Longitude": "-7.6875",
+          "Altitude": "19",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Ain-Diab_Circuit"
+        },
+        {
+          "Id": "65",
+          "Reference name of circuit": "pescara",
+          "Actual name of circuit": "Pescara Circuit",
+          "City": "Pescara",
+          "Country": "Italy",
+          "Latitude": "42.475",
+          "Longitude": "14.1508",
+          "Altitude": "129",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Pescara_Circuit"
+        },
+        {
+          "Id": "66",
+          "Reference name of circuit": "bremgarten",
+          "Actual name of circuit": "Circuit Bremgarten",
+          "City": "Bern",
+          "Country": "Switzerland",
+          "Latitude": "46.9589",
+          "Longitude": "7.40194",
+          "Altitude": "551",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Circuit_Bremgarten"
+        },
+        {
+          "Id": "67",
+          "Reference name of circuit": "pedralbes",
+          "Actual name of circuit": "Circuit de Pedralbes",
+          "City": "Barcelona",
+          "Country": "Spain",
+          "Latitude": "41.3903",
+          "Longitude": "2.11667",
+          "Altitude": "85",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Pedralbes_Circuit"
+        },
+        {
+          "Id": "68",
+          "Reference name of circuit": "buddh",
+          "Actual name of circuit": "Buddh International Circuit",
+          "City": "Uttar Pradesh",
+          "Country": "India",
+          "Latitude": "28.3487",
+          "Longitude": "77.5331",
+          "Altitude": "194",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Buddh_International_Circuit"
+        },
+        {
+          "Id": "69",
+          "Reference name of circuit": "americas",
+          "Actual name of circuit": "Circuit of the Americas",
+          "City": "Austin",
+          "Country": "USA",
+          "Latitude": "30.1328",
+          "Longitude": "-97.6411",
+          "Altitude": "161",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Circuit_of_the_Americas"
+        },
+        {
+          "Id": "70",
+          "Reference name of circuit": "red_bull_ring",
+          "Actual name of circuit": "Red Bull Ring",
+          "City": "Spielberg",
+          "Country": "Austria",
+          "Latitude": "47.2197",
+          "Longitude": "14.7647",
+          "Altitude": "678",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Red_Bull_Ring"
+        },
+        {
+          "Id": "71",
+          "Reference name of circuit": "sochi",
+          "Actual name of circuit": "Sochi Autodrom",
+          "City": "Sochi",
+          "Country": "Russia",
+          "Latitude": "43.4057",
+          "Longitude": "39.9578",
+          "Altitude": "2",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Sochi_Autodrom"
+        },
+        {
+          "Id": "73",
+          "Reference name of circuit": "baku",
+          "Actual name of circuit": "Baku City Circuit",
+          "City": "Baku",
+          "Country": "Azerbaijan",
+          "Latitude": "40.3725",
+          "Longitude": "49.8533",
+          "Altitude": "-7",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Baku_City_Circuit"
+        },
+        {
+          "Id": "75",
+          "Reference name of circuit": "portimao",
+          "Actual name of circuit": "Autódromo Internacional do Algarve",
+          "City": "Portimão",
+          "Country": "Portugal",
+          "Latitude": "37.227",
+          "Longitude": "-8.6267",
+          "Altitude": "108",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Algarve_International_Circuit"
+        },
+        {
+          "Id": "76",
+          "Reference name of circuit": "mugello",
+          "Actual name of circuit": "Autodromo Internazionale del Mugello",
+          "City": "Mugello",
+          "Country": "Italy",
+          "Latitude": "43.9975",
+          "Longitude": "11.3719",
+          "Altitude": "255",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Mugello_Circuit"
+        },
+        {
+          "Id": "77",
+          "Reference name of circuit": "jeddah",
+          "Actual name of circuit": "Jeddah Corniche Circuit",
+          "City": "Jeddah",
+          "Country": "Saudi Arabia",
+          "Latitude": "21.6319",
+          "Longitude": "39.1044",
+          "Altitude": "15",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Jeddah_Street_Circuit"
+        },
+        {
+          "Id": "78",
+          "Reference name of circuit": "losail",
+          "Actual name of circuit": "Losail International Circuit",
+          "City": "Al Daayen",
+          "Country": "Qatar",
+          "Latitude": "25.49",
+          "Longitude": "51.4542",
+          "Altitude": "12",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Losail_International_Circuit"
+        },
+        {
+          "Id": "79",
+          "Reference name of circuit": "miami",
+          "Actual name of circuit": "Miami International Autodrome",
+          "City": "Miami",
+          "Country": "USA",
+          "Latitude": "25.9581",
+          "Longitude": "-80.2389",
+          "Altitude": "0",
+          "Wikipedia URL": "http://en.wikipedia.org/wiki/Miami_International_Autodrome"
         }
       ],
-      "count": 50
+      "count": 77
     }
   ]
 }
