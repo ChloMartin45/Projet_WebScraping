@@ -48,69 +48,215 @@ code_html = driver.page_source
 driver.quit()
 
 # --- 4. Parser avec BeautifulSoup ---
-soupe = BS(code_html, features="html.parser")
-ma_table = soupe.find("div", attrs={"role": "table"})
+def extraction_table(page: str) -> str:
+    """Extraction du code source de la balise principale contenant la table"""
+    soupe = BS(page, "html.parser")
+    table = soupe.find("div", attrs={"role": "table"})
+    if not table:
+        raise ValueError("❌ Aucune table trouvée dans la page")
+    return table
 
-# --- 5. Entêtes du tableau ---
-head = []
-for th in ma_table.find_all("th"):
-    span = th.find("span", title=True)
-    if span:
-        head.append(span["title"])
-print("Entêtes :", head)
-
-# --- 6. Corps du tableau ---
-corps = ma_table.find("div", attrs={"role": "rowgroup"})
-lignes = corps.find_all("tr")
-print("Nombre de lignes :", len(lignes))
+def extraction_lignes(table) -> list:
+    """Extraction des lignes du tableau"""
+    corps = table.find("div", attrs={"role": "rowgroup"})
+    if not corps:
+        return []
+    return corps.find_all("tr")
 
 # --- 7. Modèles Pydantic ---
 class Circuits(BaseModel):
     circuitId: str
     circuitRef: str
-    name: str
-    location: str
-    country: str
+    circuitName: str
+    circuitLocation: str
+    circuitCountry: str
     lat: str
     lng: str
     alt: str
     lien: str
+
+class ConstructorResults(BaseModel):
+    constructorResultsId: str
+    raceId: str
+    constructorId: str
+    constructorPoints: int
+    status: str
+    
+class ConstructorStandings(BaseModel):
+    constructorStandingId: str
+    raceId: str
+    constructorId: str
+    points: int
+    constructorPosition: str
+    positionText: str
+    constructorWins: str
+
+class Constructors(BaseModel):
+    constructorId: str
+    constructorRef: str
+    constructorName: str
+    constructorNationality: str
+    lien_constructors: str
+
+class DriverStandings(BaseModel):
+    driverStandingId: str
+    raceId: str
+    driverId: str
+    driverPoints: int
+    driverPosition: str
+    driverPositionText: str
+    driverWins: int
+
+class Drivers(BaseModel):
+    driverId: str
+    driverRef: str
+    driverNumber: str
+    driverCodeName: str
+    driverForename: str
+    driverSurname: str
+    driverDob: str
+    driverNationality: str
+    lien_drivers: str
+
+class LapTimes(BaseModel):
+    raceId: str
+    driverId: str
+    lapNumber: str
+    lapPosition: str
+    lapTime: str
+    lapMilliseconds: int
+
+class PitStops(BaseModel):
+    raceId: str
+    driverId: str
+    stopNumber: str
+    lapNumber: str
+    PStime: str
+    PSduration: int
+    PSmilliseconds: int
+
+class Qualifiying(BaseModel):
+    qualifyId: str
+    raceId: str
+    driverId: str
+    constructorId: str
+    driverNumber: str
+    position: str
+    timeQ1: str
+    timeQ2: str
+    timeQ3: str
+
+class Races(BaseModel):
+    raceId: str
+    year: str
+    round: str
+    circuitId: str
+    circuitName: str
+    circuitDate: str
+    circuitLap: str
+    lien_circuits: str
+    fp1Date: str
+    fp1Time: str
+
+class Results(BaseModel):
+    resultId: str
+    raceId: str
+    driverId: str
+    constructorId: str
+    driverNumber: str
+    gridPosition: str
+    finalPosition: str
+    finalPositionText: str
+    positionOrder: str
+    Finalpoints: int
+
+class Seasons(BaseModel):
+    year: str
+    lien_saisons: str
+
+class SprintResults(BaseModel):
+    resultId: str
+    raceId: str
+    driverId: str
+    constructorId: str
+    driverNumber: str
+    gridPosition: str
+    finalPosition: str
+    finalPositionText: str
+    positionOrder: str
+    Finalpoints: int
+
+class Statuts(BaseModel):
+    statusId: str
+    status: str
+
 
 class ParseResult(BaseModel):
     contenu: list[Circuits]
     url: str
     description: str
 
-# --- 8. Fonction de parsing d'une ligne ---
-def parse_ligne(ligne: "bs4.element.Tag") -> Circuits:
-    tds = ligne.find_all("td")
-    assert len(tds) == 9
-    return Circuits(
-        circuitId = tds[0].text.strip(),
-        circuitRef = tds[1].text.strip(),
-        name = tds[2].text.strip(),
-        location = tds[3].text.strip(),
-        country = tds[4].text.strip(),
-        lat = tds[5].text.strip(),
-        lng = tds[6].text.strip(),
-        alt = tds[7].text.strip(),
-        lien = tds[8].text.strip()
-    )
+# Dictionnaire qui mappe les noms de dataset à la classe correspondante
+TABLE_CLASSES = {
+    "circuits": Circuits,
+    "constructorResults": ConstructorResults,
+    "constructorStandings": ConstructorStandings,
+    "constructors": Constructors,
+    "driverStanding": DriverStandings,
+    "drivers": Drivers,
+    "lapTimes": LapTimes,
+    "pitStop": PitStops,
+    "qualifying": Qualifiying,
+    "races": Races,
+    "results": Results,
+    "seasons": Seasons,
+    "sprintResults" : SprintResults,
+    "statuts": Statuts
+}
 
 # --- 9. Parser toutes les lignes ---
-resultat = ParseResult(
-    contenu=[parse_ligne(ligne) for ligne in lignes],
-    url=url,
-    description="Récupération de la liste des circuits"
-)
+def parse_ligne(ligne, model_cls: type[BaseModel]):
+    """Parse une ligne <tr> en fonction du modèle Pydantic"""
+    tds = [td.text.strip() for td in ligne.find_all("td")]
+    try:
+        return model_cls(*tds)
+    except Exception as e:
+        print(f"⚠️ Ligne ignorée ({e})")
+        return None
 
 # --- 10. Sauvegarde ---
-sauvegarde = Path(".") / "circuits2.json"
-sauvegarde.write_text(resultat.model_dump_json())
-print("Fichier circuits.json créé ✅")
+def serialise(nom_fichier: str, contenu: list[BaseModel]):
+    chemin = Path(".") / nom_fichier
+    json_data = json.dumps([o.model_dump() for o in contenu if o], indent=2)
+    chemin.write_text(json_data, encoding="utf-8")
+    print(f"✅ {len(contenu)} lignes sauvegardées dans {chemin.name}")
 
-def main() -> None:
-    print("Hello from scraping2.py!")
+def main():
+    urls = {
+        "circuits": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
+        "constructors": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
+        "drivers": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
+        "races": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
+    }
+
+    for name, url in urls.items():
+        model_cls = TABLE_CLASSES.get(name)
+        if not model_cls:
+            print(f"⏩ Classe inconnue pour {name}, ignorée.")
+            continue
+
+        page = recupere_page(url, user_agent)
+        table = extraction_table(page)
+        lignes = extraction_lignes(table)
+
+        print(f"🔎 {len(lignes)} lignes détectées pour {name}")
+
+        objets = [parse_ligne(ligne, model_cls) for ligne in lignes]
+        date_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+        serialise(f"{name}_{date_str}.json", objets)
+
+        time.sleep(1)  # éviter de spammer Kaggle
+
 
 
 if __name__ == "__main__":

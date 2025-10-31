@@ -56,13 +56,128 @@ print(ligne_test)
 class Circuits(BaseModel):
     circuitId: str
     circuitRef: str
-    name: str
-    location: str
-    country: str
+    circuitName: str
+    circuitLocation: str
+    circuitCountry: str
     lat: str
     lng: str
     alt: str
     lien: str
+
+class ConstructorResults(BaseModel):
+    constructorResultsId: str
+    raceId: str
+    constructorId: str
+    constructorPoints: int
+    status: str
+    
+class ConstructorStandings(BaseModel):
+    constructorStandingId: str
+    raceId: str
+    constructorId: str
+    points: int
+    constructorPosition: str
+    positionText: str
+    constructorWins: str
+
+class Constructors(BaseModel):
+    constructorId: str
+    constructorRef: str
+    constructorName: str
+    constructorNationality: str
+    lien_constructors: str
+
+class DriverStandings(BaseModel):
+    driverStandingId: str
+    raceId: str
+    driverId: str
+    driverPoints: int
+    driverPosition: str
+    driverPositionText: str
+    driverWins: int
+
+class Drivers(BaseModel):
+    driverId: str
+    driverRef: str
+    driverNumber: str
+    driverCodeName: str
+    driverForename: str
+    driverSurname: str
+    driverDob: str
+    driverNationality: str
+    lien_drivers: str
+
+class LapTimes(BaseModel):
+    raceId: str
+    driverId: str
+    lapNumber: str
+    lapPosition: str
+    lapTime: str
+    lapMilliseconds: int
+
+class PitStops(BaseModel):
+    raceId: str
+    driverId: str
+    stopNumber: str
+    lapNumber: str
+    PStime: str
+    PSduration: int
+    PSmilliseconds: int
+
+class Qualifiying(BaseModel):
+    qualifyId: str
+    raceId: str
+    driverId: str
+    constructorId: str
+    driverNumber: str
+    position: str
+    timeQ1: str
+    timeQ2: str
+    timeQ3: str
+
+class Races(BaseModel):
+    raceId: str
+    year: str
+    round: str
+    circuitId: str
+    circuitName: str
+    circuitDate: str
+    circuitLap: str
+    lien_circuits: str
+    fp1Date: str
+    fp1Time: str
+
+class Results(BaseModel):
+    resultId: str
+    raceId: str
+    driverId: str
+    constructorId: str
+    driverNumber: str
+    gridPosition: str
+    finalPosition: str
+    finalPositionText: str
+    positionOrder: str
+    Finalpoints: int
+
+class Seasons(BaseModel):
+    year: str
+    lien_saisons: str
+
+class SprintResults(BaseModel):
+    resultId: str
+    raceId: str
+    driverId: str
+    constructorId: str
+    driverNumber: str
+    gridPosition: str
+    finalPosition: str
+    finalPositionText: str
+    positionOrder: str
+    Finalpoints: int
+
+class Statuts(BaseModel):
+    statusId: str
+    status: str
 
 class ParseResult(BaseModel):
     contenu : list[Circuits]
