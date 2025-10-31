@@ -18,36 +18,41 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from datetime import datetime
 
 # --- 1. Ouvrir la page avec Selenium ---
-url = "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data"
+def recupere_page_selenium(url: str) -> str:
+    """Ouvre une page Kaggle avec Safari, scrolle jusqu’à charger tout le tableau, et retourne le HTML complet."""
+    print(f"🌐 Ouverture de : {url}")
+    driver = webdriver.Safari(service=Service())
+    driver.get(url)
 
-driver = webdriver.Safari(service=Service())
-driver.get(url)
+    try:
+        wait = WebDriverWait(driver, 15)
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='table']")))
 
-# --- 2. Attendre que la table soit présente ---
-wait = WebDriverWait(driver, 10)  # max 10 secondes
-wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[role='table']")))
+        table_div = driver.find_element(By.CSS_SELECTOR, "div[role='table']")
+        last_height = driver.execute_script("return arguments[0].scrollHeight", table_div)
 
-table_div = driver.find_element(By.CSS_SELECTOR, "div[role='table']")
-last_height = driver.execute_script("return arguments[0].scrollHeight", table_div)
+        # Scroll progressif pour charger toutes les lignes
+        while True:
+            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", table_div)
+            time.sleep(1.5)
+            new_height = driver.execute_script("return arguments[0].scrollHeight", table_div)
+            if new_height == last_height:
+                break
+            last_height = new_height
 
-while True:
-    driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", table_div)
-    time.sleep(2)
+        print("✅ Fin du scroll dans la table.")
 
-    new_height = driver.execute_script("return arguments[0].scrollHeight", table_div)
-    if new_height == last_height:
-        break
-    last_height = new_height
+        code_html = driver.page_source
+        return code_html
 
-print("✅ Fin du scroll dans la table.")
-
-# --- 3. Récupérer le HTML complet de la page ---
-code_html = driver.page_source
-driver.quit()
+    finally:
+        driver.quit()
 
 # --- 4. Parser avec BeautifulSoup ---
+
 def extraction_table(page: str) -> str:
     """Extraction du code source de la balise principale contenant la table"""
     soupe = BS(page, "html.parser")
@@ -234,9 +239,19 @@ def serialise(nom_fichier: str, contenu: list[BaseModel]):
 def main():
     urls = {
         "circuits": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
-        "constructors": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
-        "drivers": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
-        "races": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
+        "constructorResults": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=constructor_results.csv",
+        "constructorStandings": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=constructor_standings.csv",
+        "constructors": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=constructors.csv",
+        "driverStanding": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=driver_standings.csv",
+        "drivers": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=drivers.csv",
+        "lapTimes": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=lap_times.csv",
+        "pitStop": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=pit_stops.csv",
+        "qualifying": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=qualifying.csv",
+        "races": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=races.csv",
+        "results": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=results.csv",
+        "seasons": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=seasons.csv",
+        "sprintResults" : "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=sprint_results.csv",
+        "statuts": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=status.csv"
     }
 
     for name, url in urls.items():
@@ -245,7 +260,7 @@ def main():
             print(f"⏩ Classe inconnue pour {name}, ignorée.")
             continue
 
-        page = recupere_page(url, user_agent)
+        page = recupere_page_selenium(url)
         table = extraction_table(page)
         lignes = extraction_lignes(table)
 
