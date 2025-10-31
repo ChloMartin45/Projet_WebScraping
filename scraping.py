@@ -22,10 +22,15 @@ if "matde" in str(repertoire):
 else:
     dossier = list(repertoire.glob("*"))[9]
 
+
+print(list(dossier.glob("*.html")))
+
 if "matde" in str(dossier):
     fichier = list(dossier.glob("*"))[1]
 fichier = list(dossier.glob("*"))[0]
 print(fichier)
+
+
 
 code_html = fichier.read_text(encoding="utf-8")
 len(code_html)
