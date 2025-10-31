@@ -14,6 +14,8 @@ from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.safari.service import Service
 from selenium.webdriver.safari.options import Options
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,7 +26,12 @@ from datetime import datetime
 def recupere_page_selenium(url: str) -> str:
     """Ouvre une page Kaggle avec Safari, scrolle jusqu’à charger tout le tableau, et retourne le HTML complet."""
     print(f"🌐 Ouverture de : {url}")
-    driver = webdriver.Safari(service=Service())
+    dir_path = Path(".").resolve()
+
+    if "matde" in str(dir_path):
+        driver = webdriver.Chrome(service=ChromeService(), options=ChromeOptions())
+    else:
+        driver = webdriver.Safari(service=Service())
     driver.get(url)
 
     try:
