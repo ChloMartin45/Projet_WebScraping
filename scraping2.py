@@ -66,7 +66,7 @@ def extraction_lignes(table) -> list:
     corps = table.find("div", attrs={"role": "rowgroup"})
     if not corps:
         return []
-    return corps.find_all("tr")
+    return corps.find_all("div", attrs={"role": "row"})
 
 # --- 7. Modèles Pydantic ---
 class Circuits(BaseModel):
@@ -197,7 +197,7 @@ class Statuts(BaseModel):
 
 
 class ParseResult(BaseModel):
-    contenu: list[Circuits]
+    contenu: list
     url: str
     description: str
 
@@ -221,20 +221,31 @@ TABLE_CLASSES = {
 
 # --- 9. Parser toutes les lignes ---
 def parse_ligne(ligne, model_cls: type[BaseModel]):
-    """Parse une ligne <tr> en fonction du modèle Pydantic"""
-    tds = [td.text.strip() for td in ligne.find_all("td")]
+    tds = [td.text.strip() for td in ligne.find_all("div", attrs={"role": "cell"})]
+    field_names = list(model_cls.model_fields.keys())
+    if len(tds) != len(field_names):
+        print(f"⚠️ Nombre de colonnes inattendu ({len(tds)} vs {len(field_names)}) pour {model_cls.__name__}")
+        return None
+    data = dict(zip(field_names, tds))
     try:
-        return model_cls(*tds)
+        return model_cls(**data)
     except Exception as e:
         print(f"⚠️ Ligne ignorée ({e})")
         return None
 
 # --- 10. Sauvegarde ---
 def serialise(nom_fichier: str, contenu: list[BaseModel]):
-    chemin = Path(".") / nom_fichier
-    json_data = json.dumps([o.model_dump() for o in contenu if o], indent=2)
-    chemin.write_text(json_data, encoding="utf-8")
-    print(f"✅ {len(contenu)} lignes sauvegardées dans {chemin.name}")
+    dossier_exports = Path("exports")
+    dossier_exports.mkdir(exist_ok=True)
+
+    chemin = dossier_exports / nom_fichier
+    contenu_valide = [o for o in contenu if o]
+
+    # ✅ Utilisation de model_dump_json()
+    json_str = json.dumps([o.model_dump() for o in contenu_valide], indent=2, ensure_ascii=False)
+    chemin.write_text(json_str, encoding="utf-8")
+
+    print(f"✅ {len(contenu_valide)} lignes sauvegardées dans {chemin}")
 
 def main():
     urls = {
@@ -266,13 +277,14 @@ def main():
 
         print(f"🔎 {len(lignes)} lignes détectées pour {name}")
 
-        objets = [parse_ligne(ligne, model_cls) for ligne in lignes]
+        objets = [parse_ligne(ligne, model_cls) for ligne in lignes if ligne]
+        objets_valides = [o for o in objets if o]
+
+        resultat = ParseResult(contenu=objets_valides, url=url, description=f"Table {name} Kaggle")
         date_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-        serialise(f"{name}_{date_str}.json", objets)
+        serialise(f"{name}_{date_str}.json", resultat)
 
         time.sleep(1)  # éviter de spammer Kaggle
-
-
 
 if __name__ == "__main__":
     main()
