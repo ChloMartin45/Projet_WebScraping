@@ -16,12 +16,18 @@ from pydantic import BaseModel
 
 repertoire = Path(".").resolve()
 
-dossier = list(repertoire.glob("*"))[9]
+print(repertoire)
+if "matde" in str(repertoire):
+    dossier = list(repertoire.glob("*"))[6]
+else:
+    dossier = list(repertoire.glob("*"))[9]
 
+if "matde" in str(dossier):
+    fichier = list(dossier.glob("*"))[1]
 fichier = list(dossier.glob("*"))[0]
 print(fichier)
 
-code_html = fichier.read_text()
+code_html = fichier.read_text(encoding="utf-8")
 len(code_html)
 code_html[:200]
 
