@@ -8,6 +8,7 @@
 # ]
 # ///
 
+import json
 from bs4 import BeautifulSoup as BS
 from pydantic import BaseModel
 from pathlib import Path
@@ -73,7 +74,7 @@ def extraction_lignes(table) -> list:
     corps = table.find("div", attrs={"role": "rowgroup"})
     if not corps:
         return []
-    return corps.find_all("div", attrs={"role": "row"})
+    return corps.find_all("tr")
 
 # --- 7. Modèles Pydantic ---
 class Circuits(BaseModel):
@@ -228,7 +229,7 @@ TABLE_CLASSES = {
 
 # --- 9. Parser toutes les lignes ---
 def parse_ligne(ligne, model_cls: type[BaseModel]):
-    tds = [td.text.strip() for td in ligne.find_all("div", attrs={"role": "cell"})]
+    tds = [td.text.strip() for td in ligne.find_all("td")]
     field_names = list(model_cls.model_fields.keys())
     if len(tds) != len(field_names):
         print(f"⚠️ Nombre de colonnes inattendu ({len(tds)} vs {len(field_names)}) pour {model_cls.__name__}")
@@ -241,22 +242,25 @@ def parse_ligne(ligne, model_cls: type[BaseModel]):
         return None
 
 # --- 10. Sauvegarde ---
-def serialise(nom_fichier: str, contenu: list[BaseModel]):
+def serialise(nom_fichier: str, resultat: ParseResult):
     dossier_exports = Path("exports")
     dossier_exports.mkdir(exist_ok=True)
 
     chemin = dossier_exports / nom_fichier
-    contenu_valide = [o for o in contenu if o]
+    contenu_valide = [o for o in resultat.contenu if o]
 
-    # ✅ Utilisation de model_dump_json()
-    json_str = json.dumps([o.model_dump() for o in contenu_valide], indent=2, ensure_ascii=False)
+    json_str = json.dumps({
+        "url": resultat.url,
+        "description": resultat.description,
+        "data": [o.model_dump() for o in contenu_valide]
+    }, indent=2, ensure_ascii=False)
+
     chemin.write_text(json_str, encoding="utf-8")
-
     print(f"✅ {len(contenu_valide)} lignes sauvegardées dans {chemin}")
 
 def main():
     urls = {
-        "circuits": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020/data",
+        "circuits": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=circuits.csv",
         "constructorResults": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=constructor_results.csv",
         "constructorStandings": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=constructor_standings.csv",
         "constructors": "https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?select=constructors.csv",
