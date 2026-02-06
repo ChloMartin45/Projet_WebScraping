@@ -1,10 +1,10 @@
 name: Auto Scraping AutoScout24
 
-on:
-  schedule:
-    - cron: '15 3 * * *'    # 3h15
-    - cron: '45 11 * * *'   # 11h45
-    - cron: '30 19 * * *'   # 19h30
+#on:
+#  schedule:
+#    - cron: '15 3 * * *'    # 3h15
+#    - cron: '45 11 * * *'   # 11h45
+#    - cron: '30 19 * * *'   # 19h30
   workflow_dispatch:  # Permet de lancer manuellement le workflow
 
 permissions:
