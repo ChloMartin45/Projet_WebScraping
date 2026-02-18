@@ -5,7 +5,7 @@ name: Auto Scraping AutoScout24
 #    - cron: '15 3 * * *'    # 3h15
 #    - cron: '45 11 * * *'   # 11h45
 #    - cron: '30 19 * * *'   # 19h30
-  workflow_dispatch:  # Permet de lancer manuellement le workflow
+#  workflow_dispatch:  # Permet de lancer manuellement le workflow
 
 permissions:
   contents: write
@@ -47,9 +47,8 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         git add data/raw/annonces_autoscout24.json
-        git diff --staged --quiet || git commit -m "🤖 Auto-scraping: Mise à jour des annonces [$(date '+%Y-%m-%d %H:%M:%S')]"
+        git diff --staged --quiet || git commit -m "🤖 Auto-scraping: Mise à jour des annonces [$$(date '+%Y-%m-%d %H:%M:%S')]"
         git pull --rebase origin main
         git push
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
